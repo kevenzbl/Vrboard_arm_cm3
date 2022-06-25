@@ -1,8 +1,8 @@
-#include "../include/i2c.h"
-#include "../include/gpio.h"
-#include "../include/config.h"
-#include "../include/define.h"
-#include "../include/serial.h"
+#include "i2c.h"
+#include "gpio.h"
+#include "peripheral.h"
+#include "define.h"
+#include "serial.h"
 
 #define OV9282_ADDR		    0xc0	    //addr is low
 

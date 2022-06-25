@@ -1,6 +1,5 @@
 #include "ssp.h"
-//#include "../include/gpio.h"
-#include "config.h"
+#include "peripheral.h"
 
 //SSPMS clk 100MHz
 
@@ -22,26 +21,30 @@ void ssp_cs_disable()
 void ssp_init(SPI_InitPara_t* spi_init_para)
 {
     __IO SSPMS_T *pSspms = (SSPMS_T *)ssp_get_base_addr();
-//    __IO SSPCR0_U          sspcr0;                // 0x00
+    SSPCR0_U          sspcr0;                // 0x00
 //    __IO SSPCR1_U          sspcr1;                // 0x04
 //  __IO SSPDR_U           sspdr;                 // 0x08
 //  __IO SSPSR_U           sspsr;                 // 0x0C
-    __IO SSPCPSR_U         sspcpsr;               // 0x10
+    SSPCPSR_U         sspcpsr;               // 0x10
 //  __IO SSPII_ICR_U       sspii_icr;             // 0x14
 
 	__IO SPI_TypeDef* SPI = (SPI_TypeDef*)SPI_32F1_BASE_ADDR;
-	__IO SPI_CR1_T spi_cr1;										//0x00
-	__IO SPI_CR2_T spi_cr2;										//0x04
+	SPI_CR1_T spi_cr1;										//0x00
+	SPI_CR2_T spi_cr2;										//0x04
 	
-    sspcpsr.v = 0;
-    sspcpsr.bit_info.cpsdvsr = 0xFF;
-    pSspms->sspcpsr.v = sspcpsr.v;
+    //sspcpsr.v = 0x5;
+    pSspms->sspcpsr.v = 0x6;
 
+	//spio??-¨º?CR0D¡ä0¡ê?¨ª?2?sclk
+	pSspms->sspcr0.v = 0;
+	
 	spi_cr1.bit_info.mstr = spi_init_para->spi_mode&0x01;
 	spi_cr1.bit_info.dff = spi_init_para->spi_datasize&0x01;
 	spi_cr1.bit_info.cpha = spi_init_para->spi_cpha&0x01;
 	spi_cr1.bit_info.cpol = spi_init_para->spi_cpol&0x01;
+	spi_cr1.bit_info.reserve = 3;
 	SPI->CR1.cr1_reg = spi_cr1.cr1_reg;
+
 }
 
 void ssp_disable(void)

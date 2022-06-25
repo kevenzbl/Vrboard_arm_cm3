@@ -1,4 +1,4 @@
-#include "config.h"
+#include "peripheral.h"
 #include "gpio.h"
 
 //GPIO_PIN_T gpio_grp_pin[GPIO_PIN15];

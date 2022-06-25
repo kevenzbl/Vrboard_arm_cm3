@@ -1967,6 +1967,7 @@ char* M8266WIFI_SPI_Get_Driver_Info(char* drv_info);
 void M8266HostIf_Set_nRESET_Pin(u8 level);
 void M8266HostIf_Set_SPI_nCS_Pin(u8 level);
 void M8266HostIf_delay_us(u8 nus);
+void M8266HostIf_delay_ms(u8 ms);
 u8   M8266HostIf_SPI_ReadWriteByte(u8 byte); // Not required for most platforms.
 
 #endif

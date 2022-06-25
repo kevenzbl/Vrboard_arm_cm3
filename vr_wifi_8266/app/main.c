@@ -2,12 +2,16 @@
 #include "define.h"
 #include "gpio.h"
 #include "i2c.h"
-#include "config.h"
 #include "lm3644.h"
 #include "imu.h"
 #include "spi.h"
 #include "uart.h"
 #include "delay.h"
+#include "peripheral.h"
+#include "cpu_core.h"
+#include "M8266HostIf.h"
+#include "M8266WIFIDrv.h"
+#include "M8266WIFI_ops.h"
 
 /*
 UARTINTR£¬
@@ -35,14 +39,14 @@ volatile u32 *ptr;
 
 extern u8 i2c_scl;
 extern u8 i2c_sda;
-
+void M8266WIFI_Test(void);
 #define TIMESTAMP_DIF_1MS       10
 
 
 // LM_HW_EN  GPIO13 3644 en
 // scl gpio6; sda gpio7
 
-
+/*
 void sensor_reset()
 {
 	gpio_out_data(CMR0_RST, 0);
@@ -67,65 +71,43 @@ void sensor_reset()
 }
 
 
+void HardFault_Handler(void)
+{
+  // Go to infinite loop when Hard Fault exception occurs
+  while (1)
+  {
+  }
+}
+*/
+u8 buf[128];
+
 int main()
 {
-	volatile int dly = 0x1fff;
 	static int imu_cnt = 0;
-	u8 data;
-
-    unsigned int timestamp,timedif;
-	//gpio_init();
-	//uartInit();
+	u8 success = 0;
+	
+	cpu_ts_tmr_init();
+	uartInit();
 	delay_init();
 	spi_init();
-	gpio_out_data(WIFI_OE, 1);
-#if 0
-	//    sensor_reset();
-	gpio_out_data(CMR0_RST, 0);
-	dly = 0x1fff;  	  while(dly--);
-	gpio_out_data(CMR0_RST, 1);
 
-	gpio_out_data(CMR1_RST, 0);
-	dly = 0x1fff;  	  while(dly--);
-	gpio_out_data(CMR1_RST, 1);
-
-	gpio_out_data(CY_RST, 0);
-	dly = 0x1fff;  	  while(dly--);
-	gpio_out_data(CY_RST, 1);
-
-	gpio_out_data(IR_RST, 0);
-	dly = 0x1fff;  	  while(dly--);
-	gpio_out_data(IR_RST, 1);
-
-	gpio_out_data(GPIO_16, 0);
-	dly = 0x1fff;  	  while(dly--);
-	gpio_out_data(GPIO_16, 1);	
-
-	ov9281_l_get_id();
-	ov9281_init_1();
-
-	ov9281_r_get_id();
-	ov9281_init_r();
-
-#endif
+	M8266HostIf_Init();
+	success = M8266WIFI_Module_Init_Via_SPI();
+	M8266WIFI_Test();
 
 #if 1
-    //imu_init();
-	
 	while(1) {
 		imu_cnt++;
-		delay_us(1000);
-		gpio_out_data(WIFI_CS, 0);
-		spi_ReadWrite_byte(0x66);
-		gpio_out_data(WIFI_CS, 1);
-		//spi_send_byte(SPI0,0xAA);
-		//imu_run(timestamp);
+		//printf("zzz imu_cnt:%d!\n",imu_cnt);
+		delay_ms(10);
 	}
 #endif
 }
 
-
-void int0_isr()
-{  
+void HardFault_Handler(void)
+{
+  /* Go to infinite loop when Hard Fault exception occurs */
+  while (1)
+  {
+  }
 }
-

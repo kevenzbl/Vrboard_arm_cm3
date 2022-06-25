@@ -1,24 +1,46 @@
-#include "../include/config.h"
-#include "../include/uart.h"
-#include "../include/define.h"
+#include "peripheral.h"
+#include "uart.h"
+#include "stdarg.h"
+#include "delay.h"
+#if 1
 
-unsigned int uartGetBaseAddr(void)
+//?¨®¨¨?¨°???¡ä¨²??,?¡ì3?printfo¡¥¨ºy,??2?D¨¨¨°a????use MicroLIB	  
+#pragma import(__use_no_semihosting)             
+//¡À¨º¡Á??aD¨¨¨°a¦Ì??¡ì3?o¡¥¨ºy                 
+
+/*
+static char printf_buf[100];
+
+void dbg_printf(char *fmt, ...)
 {
-    return UART0_BASE_ADDR;
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(printf_buf,fmt,args);
+    va_end(args);
+    uartPuts(printf_buf);
 }
+*/
+#else
+void dbg_printf(char *fmt, ...)
+{
+    uartPuts(fmt);
+}
+#endif
 
-void uartPutc(char c)
+void uartPutc(u8 c)
 {
     volatile UART_T * pUart = (UART_T *)uartGetBaseAddr();
-    UART_DATA_U                dat;    //0x0
-	UART_STATE_U               stat; 
+    volatile UART_DATA_U dat;    //0x0
      
-	while(read32(0x40004004) & 1);
-    dat.v = 0;
+	while(pUart->stat.bit_info.tx_full & 1)
+		dat.v = dat.v;
+
+    pUart->dat.v = c;
+	dat.v = 0;
     dat.bit_info.data = c;
-    pUart->dat.v = dat.v;
 }
 
+/*
 char uartGetc(void)
 {
     volatile UART_T * pUart = (UART_T *)uartGetBaseAddr();
@@ -34,19 +56,30 @@ void uartPuts(const char *s)
     while (*s)
         uartPutc(*s++);
 }
+*/
+
+int fputc(int ch, FILE *f)
+{
+  	uartPutc(ch);
+	return ch;
+}
+
+unsigned int uartGetBaseAddr(void)
+{
+    return UART0_BASE_ADDR;
+}
 
 void uartInit(void)
 {
-    volatile UART_T * pUart = (UART_T *)uartGetBaseAddr();
-    UART_DATA_U                dat;    //0x0
-    UART_STATE_U               stat;    //0x4
-    UART_CTRL_U                ctrl;   //0x8
-    UART_INTR_STAT_CLEAR_U     intr_stat_clear;    //0xC
-    UART_BAUDDIV_U             bauddiv;	   //0x10
+    __IO UART_T * pUart = (UART_T *)uartGetBaseAddr();
+    //UART_STATE_U               stat;    			//0x4
+    UART_CTRL_U    ctrl;   				//0x8
+    //UART_INTR_STAT_CLEAR_U     intr_stat_clear;    	//0xC
+	UART_BAUDDIV_U             bauddiv;	   			//0x10
 
 	int rate;
 
-    rate = UART_CLK / BAUD_RATE;	 //0x9c4; 
+    rate = (UART_CLK / BAUD_RATE) + 1;	 //0x9c4;
 	bauddiv.v = 0;
     bauddiv.bit_info.baud_div = rate;
     pUart->bauddiv.v = bauddiv.v;

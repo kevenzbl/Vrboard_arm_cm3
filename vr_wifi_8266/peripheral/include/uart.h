@@ -16,13 +16,15 @@
 #ifndef __UART_H__
 #define __UART_H__
 
+#include "stdio.h"	
+#include "define.h"
 
 #define UART_CLK	60000000
 #define BAUD_RATE	115200
 
 typedef union UART_DATA_U_ 
 {
-	 unsigned long v;
+	 unsigned int v;
 	 struct UART_DATA_T_ 
 	 {
 		 unsigned data         : 8;
@@ -44,7 +46,7 @@ typedef union UART_STATE_U_
 
 typedef union UART_CTRL_U_ 
 {
-	 unsigned long v;
+	 unsigned int v;
 	 struct UART_CTRL_T_ 
 	 {
 		 unsigned tx_en               : 1;
@@ -54,7 +56,7 @@ typedef union UART_CTRL_U_
          unsigned tx_overrun_intr_en  : 1;
          unsigned rx_overrun_intr_en  : 1;
          unsigned tx_test_mode        : 1;
-	 }bit_info; 
+	 }bit_info;
 }UART_CTRL_U;    //0x08
 
 typedef union UART_INTR_STAT_CLEAR_U_ 
@@ -91,10 +93,10 @@ typedef struct UART_T_
 unsigned int uartGetBaseAddr(void);
 void uartInit(void);
 void uartStop(void);
-void uartPutc(char c);
+void uartPutc(u8);
 char uartGetc(void);
 void uartPuts(const char *s);
-
+int fputc(int ch, FILE *f);
 
 
 

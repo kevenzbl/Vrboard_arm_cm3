@@ -3,7 +3,7 @@ init_xxx  EQU     0
 
 
 
-Stack_Size      EQU     0x00000080
+Stack_Size      EQU     0x0002000
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size

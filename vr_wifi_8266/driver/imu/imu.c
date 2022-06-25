@@ -10,11 +10,11 @@
 /*                                                                          */
 /****************************************************************************/
 
-#include "..\include\config.h"
-#include "..\include\spi.h"
-#include "..\include\ssp.h"
+#include "peripheral.h"
+#include "spi.h"
+#include "ssp.h"
 
-#include "..\include\imu.h"
+#include "imu.h"
 #include <string.h>
 
 //***************************************************************************

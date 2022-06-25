@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "i2c.h"
 #include "gpio.h"
-#include "config.h"
+#include "peripheral.h"
 #include "define.h"
 #include "serial.h"
 #include "camera_sensor.h"

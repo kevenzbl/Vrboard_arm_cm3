@@ -1,8 +1,6 @@
-#ifndef __CONFIG_H__
-#define __CONFIG_H__
+#ifndef __PERIPHERAL_H__
+#define __PERIPHERAL_H__
 
-
-#define CPU_CFG_TS_TMR_EN 1
 //APB
 #define TIMER0_BASE_ADDR				0x40000000
 #define TIMER1_BASE_ADDR				0x40001000
@@ -70,3 +68,4 @@
 
   
 #endif
+

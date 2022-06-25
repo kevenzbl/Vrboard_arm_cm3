@@ -230,3 +230,8 @@ void M8266HostIf_delay_us(u8 nus)
 {
    delay_us(nus);
 }
+
+void M8266HostIf_delay_ms(u8 ms)
+{
+   delay_ms(ms);
+}

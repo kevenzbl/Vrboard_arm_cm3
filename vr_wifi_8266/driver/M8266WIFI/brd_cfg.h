@@ -27,7 +27,7 @@
 
 //#define MCU_IS_HT32F16XX
 
-#include "config.h"
+#include "peripheral.h"
 #if defined(MCU_IS_HT32F16XX)
 #include "ht32f1655_56.h"
 #endif

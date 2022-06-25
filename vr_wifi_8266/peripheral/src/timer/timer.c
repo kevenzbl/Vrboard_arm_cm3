@@ -1,5 +1,5 @@
-#include "../include/timer.h"
-#include "../include/config.h"
+#include "timer.h"
+#include "peripheral.h"
 
 unsigned int timerGetBaseAddr(void)
 {
